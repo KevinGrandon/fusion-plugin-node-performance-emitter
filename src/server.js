@@ -11,7 +11,6 @@
 /* Configuration Tokens */
 // $FlowFixMe flow should be aware of native timers module
 import nodeTimers from 'timers';
-import profiler from 'gc-profiler';
 // $FlowFixMe flow should be aware of http.globalAgent property
 import {globalAgent} from 'http';
 import assert from 'assert';
@@ -95,14 +94,12 @@ class NodePerformanceEmitter {
   start() {
     this.startTrackingEventLoopLag();
     this.startTrackingMemoryUsage();
-    this.startTrackingGCUsage();
     this.startTrackingSocketUsage();
   }
 
   stop() {
     this.stopTrackingEventLoopLag();
     this.stopTrackingMemoryUsage();
-    this.stopTrackingGCUsage();
     this.stopTrackingSocketUsage();
   }
 
@@ -158,27 +155,6 @@ class NodePerformanceEmitter {
     this.emit('gauge:rss', memoryUsage.rss);
     this.emit('gauge:heapTotal', memoryUsage.heapTotal);
     this.emit('gauge:heapUsed', memoryUsage.heapUsed);
-  }
-
-  /* Tracking Garbage Collection */
-  startTrackingGCUsage() {
-    if (this.isTrackingGarbageCollection)
-      throw new Error(
-        'Garbage Collection is already being tracked.  Please stop previous instance before beginning a new one.'
-      );
-
-    profiler.on('gc', info => {
-      this.emit('timing:gc', {
-        duration: info.duration,
-        type: info.type,
-        forced: info.forced,
-      });
-    });
-  }
-
-  stopTrackingGCUsage() {
-    profiler.removeAllListeners('gc');
-    this.isTrackingGarbageCollection = false;
   }
 
   /* Tracking Socket Usage */

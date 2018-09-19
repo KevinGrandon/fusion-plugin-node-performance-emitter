@@ -10,19 +10,19 @@ Collects stats on the event loop lag, garbage collection events, and memory stat
 
 ### Table of contents
 
-* [Installation](#installation)
-* [Usage](#usage)
-* [Setup](#setup)
-* [API](#api)
-  * [Registration API](#registration-api)
-    * [`NodePerformanceEmitter`](#nodeperformanceemitter)
-    * [`NodePerformanceEmitterToken`](#nodeperformanceemittertoken)
-  * [Dependencies](#dependencies)
-    * [`UniversalEventsToken`](#universaleventstoken)
-    * [`TimersToken`](#timerstoken)
-    * [`EventLoopLagIntervalToken`](#eventlooplagintervaltoken)
-    * [`SocketIntervalToken`](#socketintervaltoken)
-  * [Events](#events)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Setup](#setup)
+- [API](#api)
+  - [Registration API](#registration-api)
+    - [`NodePerformanceEmitter`](#nodeperformanceemitter)
+    - [`NodePerformanceEmitterToken`](#nodeperformanceemittertoken)
+  - [Dependencies](#dependencies)
+    - [`UniversalEventsToken`](#universaleventstoken)
+    - [`TimersToken`](#timerstoken)
+    - [`EventLoopLagIntervalToken`](#eventlooplagintervaltoken)
+    - [`SocketIntervalToken`](#socketintervaltoken)
+  - [Events](#events)
 
 ---
 
@@ -42,13 +42,13 @@ import {createPlugin} from 'fusion-core';
 import {UniversalEventsToken} from 'fusion-plugin-universal-events';
 
 export default createPlugin({
-  deps: { emitter: UniversalEventsToken },
+  deps: {emitter: UniversalEventsToken},
   provides: deps => {
     const emitter = deps.emitter;
     emitter.on('node-performance-emitter:{action}', e => {
       console.log(e); // log events to console
     });
-  }
+  },
 });
 ```
 
@@ -125,8 +125,8 @@ Optional. Server-only. Register a `setInterval`/`clearInterval` implementation. 
 ```js
 type Timers = {
   setInterval: (Function, number) => number,
-  clearInterval: (number) => void,
-}
+  clearInterval: number => void,
+};
 ```
 
 ##### `EventLoopLagIntervalToken`
@@ -162,7 +162,6 @@ This package has no public API methods. To consume performance events, add an ev
 - `node-performance-emitter:gauge:externalMemory` - process.memoryUsage().external
 - `node-performance-emitter:gauge:heapTotal` - process.memoryUsage().heapTotal
 - `node-performance-emitter:gauge:heapUsed` - process.memoryUsage().heapUsed
-- `node-performance-emitter:timing:gc` - time spent doing garbage collection
 - `node-performance-emitter:gauge:globalAgentSockets` - http.globalAgent.sockets
 - `node-performance-emitter:gauge:globalAgentRequests`- http.globalAgent.requests
 - `node-performance-emitter:gauge:globalAgentFreeSockets`- http.globalAgent.freeSockets

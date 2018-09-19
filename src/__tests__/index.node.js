@@ -211,37 +211,3 @@ test('service - tracking emit messages', t => {
     t.end();
   });
 });
-
-test('service - testing garbage collection emits', t => {
-  const mockEmitter = mockEmitterFactory();
-  const mockTimers = mockTimersFactory();
-  const appCreator = () => {
-    const app = new App('content', el => el);
-    app.register(TimersToken, mockTimers);
-    app.register(UniversalEventsToken, mockEmitter);
-    registerMockConfig(app);
-    return app;
-  };
-
-  // Register to listen to emits
-  let gcMessageReceived = false;
-  mockEmitter.on(`${EVENT_PLUGIN_NAME}:timing:gc`, () => {
-    gcMessageReceived = true;
-  });
-
-  const perfService = getService(appCreator, NodePerformanceEmitterPlugin);
-  perfService.startTrackingGCUsage();
-
-  // Make some garbage!
-  var myTracker = [];
-  for (var i = 0; i < 1000000; i++) {
-    myTracker.push({lotsof: 'garbage'});
-  }
-  myTracker = [];
-
-  setTimeout(() => {
-    perfService.stopTrackingGCUsage();
-    t.assert(gcMessageReceived, 'gc: message was received');
-    t.end();
-  }, 100);
-});
